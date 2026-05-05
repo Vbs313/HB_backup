@@ -32,6 +32,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
         private static readonly ILog _log = Common.LogUtilities.Logger.GetLoggerInstanceForType();
 
         private static DefaultBotSettings _instance;
+        private static readonly object _lock = new object();
 
         public DefaultBotSettings() : base(GetSettingsFilePath(
             Configuration.Instance.Name, string.Format("{0}.json", "DefaultBot")))
@@ -43,23 +44,33 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
         {
             get
             {
-                DefaultBotSettings result;
-                if ((result = _instance) == null)
+                if (_instance == null)
                 {
-                    result = (_instance = new DefaultBotSettings());
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                            _instance = new DefaultBotSettings();
+                    }
                 }
-                return result;
+                return _instance;
             }
         }
 
         public void ReloadFile()
         {
             Reload(GetSettingsFilePath(Configuration.Instance.Name,
-                string.Format("{0}.json", "DefaultBot" + GetMyHashCode())));
+                string.Format("{0}.json", "DefaultBot")));
             if (CommandLine.Arguments.Exists("rule"))
             {
-                ConstructedGameRule = (VisualsFormatType)(int.Parse(CommandLine.Arguments.Single("rule")) + 1);
-                _log.ErrorFormat("[中控设置] 传统对战模式 = {0}.", ConstructedGameRule);
+                try
+                {
+                    ConstructedGameRule = (VisualsFormatType)(int.Parse(CommandLine.Arguments.Single("rule")) + 1);
+                    _log.ErrorFormat("[中控设置] 传统对战模式 = {0}.", ConstructedGameRule);
+                }
+                catch (Exception e)
+                {
+                    _log.ErrorFormat("[中控设置] 解析 rule 参数失败: {0}.", e.Message);
+                }
             }
             if (CommandLine.Arguments.Exists("deck"))
             {
@@ -69,14 +80,28 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
             if (CommandLine.Arguments.Exists("width"))
             {
                 ReleaseLimit = true;
-                ReleaseLimitW = int.Parse(CommandLine.Arguments.Single("width"));
-                _log.ErrorFormat("[中控设置] 炉石窗口宽度 = {0}.", ReleaseLimitW);
+                try
+                {
+                    ReleaseLimitW = int.Parse(CommandLine.Arguments.Single("width"));
+                    _log.ErrorFormat("[中控设置] 炉石窗口宽度 = {0}.", ReleaseLimitW);
+                }
+                catch (Exception e)
+                {
+                    _log.ErrorFormat("[中控设置] 解析 width 参数失败: {0}.", e.Message);
+                }
             }
             if (CommandLine.Arguments.Exists("height"))
             {
                 ReleaseLimit = true;
-                ReleaseLimitH = int.Parse(CommandLine.Arguments.Single("height"));
-                _log.ErrorFormat("[中控设置] 炉石窗口高度 = {0}.", ReleaseLimitH);
+                try
+                {
+                    ReleaseLimitH = int.Parse(CommandLine.Arguments.Single("height"));
+                    _log.ErrorFormat("[中控设置] 炉石窗口高度 = {0}.", ReleaseLimitH);
+                }
+                catch (Exception e)
+                {
+                    _log.ErrorFormat("[中控设置] 解析 height 参数失败: {0}.", e.Message);
+                }
             }
         }
 

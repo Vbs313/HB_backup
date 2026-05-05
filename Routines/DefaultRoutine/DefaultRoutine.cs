@@ -31,7 +31,7 @@ using Triton.Bot.Logic.Bots.DefaultBot;
 using Logger = Triton.Common.LogUtilities.Logger;
 using System.Diagnostics;
 using System.Threading;
-using System.Data.SqlTypes;
+
 
 namespace HREngine.Bots
 {
@@ -290,6 +290,10 @@ def Execute():
                 Log.ErrorFormat("[clearLog] An exception occurred: {0}.", ex);
                 BotManager.Stop();
                 return;
+            }
+            finally
+            {
+                proc?.Dispose();
             }
         }
 
@@ -1319,7 +1323,7 @@ def Execute():
                 }
                 else
                 {
-                    Log.WarnFormat("使用地标 {0} 暂时没有目标    惩罚值", location.Name, moveTodo.penalty);
+                    Log.WarnFormat("使用地标 {0} 暂时没有目标    惩罚值：{1}", location.Name, moveTodo.penalty);
                     await location.LeftClickCard();
                     Log.WarnFormat("地标 {0} 标记为冷却中...", location.Name);
 

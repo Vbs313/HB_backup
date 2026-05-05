@@ -115,7 +115,7 @@
     <!-- DefaultBot 引用 -->
     <Reference Include="DefaultBot, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Build\DefaultBot\Debug\DefaultBot.dll</HintPath>
+      <HintPath>..\CompiledAssemblies\DefaultBot.dll</HintPath>
     </Reference>
   </ItemGroup>
   <!-- 编译文件 -->

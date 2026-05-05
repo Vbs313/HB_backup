@@ -726,6 +726,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 await Coroutine.Sleep(3000);
             }
             DefaultBotSettings.Instance.LastDeckId = heroPickerButton_0.m_preconDeckID;
+            DefaultBotSettings.Instance.Save();
             return true;
         }
 
@@ -738,7 +739,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
             {
                 for (int i = 0; i < list_1.Count; i++)
                 {
-                    collectionDeckBoxVisual = list_1[i].m_customDecks.FirstOrDefault((CollectionDeckBoxVisual x) => x.m_deckName.Text.Equals(string_1));
+                    collectionDeckBoxVisual = list_1[i].m_customDecks.FirstOrDefault((CollectionDeckBoxVisual x) => x.m_deckName.Text.Equals(string_1, StringComparison.OrdinalIgnoreCase));
                     if (collectionDeckBoxVisual != null)
                     {
                         ilog_0.DebugFormat("[卡组选择] 在第{0}页找到卡组\"{1}\"，现在切换到页面{2}.",
@@ -765,6 +766,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 {
                     Client.LeftClickAt(position);
                     DefaultBotSettings.Instance.LastDeckId = collectionDeckBoxVisual.m_deckID;
+                    DefaultBotSettings.Instance.Save();
                     await Coroutine.Sleep(3000);
                     ilog_0.DebugFormat("[卡组选择] 已选中卡组\"{0}\".", string_1);
                     return true;
@@ -1731,9 +1733,20 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
         //脚本循环
         public void Tick()
         {
+            // 检查停止信号 - 响应用户的停止请求
+            if (!BotManager.IsRunning)
+            {
+                if (coroutine_0 != null)
+                {
+                    coroutine_0.Dispose();
+                    coroutine_0 = null;
+                }
+                return;
+            }
+
             if (coroutine_0 == null || coroutine_0.IsFinished)
             {
-                ilog_0.DebugFormat("脚本已经停止 {0}", coroutine_0.Status);
+                ilog_0.DebugFormat("脚本已经停止 {0}", coroutine_0 != null ? coroutine_0.Status.ToString() : "null");
                 BotManager.Stop();
                 return;
             }

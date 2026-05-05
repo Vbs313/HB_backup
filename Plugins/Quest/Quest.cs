@@ -332,9 +332,9 @@ namespace Quest
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    Log.ErrorFormat("[任务插件] 异常: {0}", ex.Message);
                 }
             }
         }
@@ -466,9 +466,9 @@ namespace Quest
 
                 UpdateGui(bSleep);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Log.ErrorFormat("[任务插件] 异常: {0}", ex.Message);
             }
         }
     }

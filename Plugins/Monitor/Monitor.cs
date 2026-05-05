@@ -235,6 +235,7 @@ namespace Monitor
             MonitorSettings.Instance.StandardInfo = "未知";
             MonitorSettings.Instance.WildInfo = "未知";
             oldStats = GetStats();
+            if (oldStats == null) return;
             UpdateMainGuiStats();
         }
 
