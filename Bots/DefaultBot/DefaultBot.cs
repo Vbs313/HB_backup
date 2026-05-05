@@ -31,6 +31,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
         private static readonly ILog ilog_0;
 
         private Coroutine coroutine_0;
+        private bool _needsCoroutineReset = false;
+        private Func<Task> _sceneAllProcDelegate;
 
         private EmoteType emoteType_0;
 
@@ -1664,7 +1666,8 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
         //脚本启动
         public void Start()
         {
-            coroutine_0 = new Coroutine(() => SceneAllProc());
+            _sceneAllProcDelegate = () => SceneAllProc();
+            coroutine_0 = new Coroutine(_sceneAllProcDelegate);
             bool_2 = false;
             GameEventManager.Instance.Start();
             ProcessHookManager.Enable();
@@ -1715,6 +1718,7 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                 coroutine_0.Dispose();
                 coroutine_0 = null;
             }
+            _needsCoroutineReset = false;
             GameEventManager.GameOver -= GameOverEventArgsFunc;
             GameEventManager.NewGame -= NewGameEventArgsFunc;
             GameEventManager.MulliganConfirm -= MulliganConfirmEventArgsFunc;
@@ -1727,29 +1731,39 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
         //脚本循环
         public void Tick()
         {
-            if (coroutine_0.IsFinished)
+            if (coroutine_0 == null || coroutine_0.IsFinished)
             {
                 ilog_0.DebugFormat("脚本已经停止 {0}", coroutine_0.Status);
                 BotManager.Stop();
                 return;
             }
+
+            // Performance optimization: Defer coroutine recreation to avoid allocation pressure.
+            // Instead of 4 separate Dispose+new patterns, use a flag and reset once.
             if (!TritonHs.IsClientInUsableState(logReason: true))
             {
                 BotManager.MsBeforeNextTick += 750;
-                coroutine_0.Dispose();
-                coroutine_0 = new Coroutine(() => SceneAllProc());
+                _needsCoroutineReset = true;
                 return;
             }
+
+            // Reset coroutine once at the start of next usable state
+            if (_needsCoroutineReset)
+            {
+                coroutine_0.Dispose();
+                coroutine_0 = new Coroutine(_sceneAllProcDelegate);
+                _needsCoroutineReset = false;
+            }
+
             if (!bool_2 && ChatMgr.Get().FriendListFrame != null)
             {
                 ilog_0.ErrorFormat("[脚本循环] 好友聊天列表不为空.");
-                Client.LeftClickAtDialog(BnetBar.Get().
-                    m_friendButton.m_OnlineCountText.Transform.Position);
+                Client.LeftClickAtDialog(BnetBar.Get().m_friendButton.m_OnlineCountText.Transform.Position);
                 BotManager.MsBeforeNextTick += 1000;
-                coroutine_0.Dispose();
-                coroutine_0 = new Coroutine(() => SceneAllProc());
+                _needsCoroutineReset = true;
                 return;
             }
+
             bool unhandled = false;
             if (TritonHs.HandleDialog(ShouldAcceptFriendlyChallenge, out unhandled))
             {
@@ -1758,21 +1772,20 @@ namespace Triton.Bot.Logic.Bots.DefaultBot
                     BotManager.Stop();
                 }
                 BotManager.MsBeforeNextTick += 3000;
-                coroutine_0.Dispose();
-                coroutine_0 = new Coroutine(() => SceneAllProc());
+                _needsCoroutineReset = true;
                 return;
             }
+
             GameEventManager.Instance.Tick();
             PluginManager.Tick();
             RoutineManager.Tick();
             try
             {
-                coroutine_0.Resume();//bot动作
+                coroutine_0.Resume();
             }
             catch
             {
-                coroutine_0.Dispose();
-                coroutine_0 = new Coroutine(() => SceneAllProc());
+                _needsCoroutineReset = true;
                 throw;
             }
         }

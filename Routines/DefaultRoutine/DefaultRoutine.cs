@@ -768,7 +768,7 @@ def Execute():
             } */
             // if(TritonHs.GameState.IsTagBlockingInput())
             // if(TritonHs.GameState.IsResponsePacketBlocked() && TritonHs.GameState.IsGameOver())
-          while(TritonHs.GameState.IsTagBlockingInput())
+          while(TritonHs.GameState != null && TritonHs.GameState.IsTagBlockingInput())
 
         //   while(TritonHs.GameState.IsBusy() || TritonHs.GameState.HasPowersToProcess())
           {
