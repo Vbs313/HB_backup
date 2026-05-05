@@ -1,4 +1,4 @@
-using Triton.Game.Mapping;
+﻿using Triton.Game.Mapping;
 
 namespace HREngine.Bots
 {
@@ -25,7 +25,7 @@ namespace HREngine.Bots
         public int synergy = 0;//职业契合度，即各种族（机械鱼人恶魔野兽）与职业相关性
         public Handmanager.Handcard handcard;
         //手牌信息，如果Minion中储存的内容不够的话，可以调用这个获取更多的信息，例如 m.handcard.card
-        public int entitiyID = -1;//实体ID //public int id = -1;//delete this
+        public int entityID = -1;//实体ID //public int id = -1;//delete this
         public int zonepos = 0;
         /// <summary>从手牌中打出</summary>
         public bool playedFromHand = false;
@@ -58,7 +58,7 @@ namespace HREngine.Bots
         public bool Ready = false;//攻击准备就绪
         public bool taunt = false;//嘲讽
         public bool wounded = false;//受伤
-        public bool divineshild = false;//圣盾
+        public bool divineShield = false;//圣盾
         public bool windfury = false; //风怒
         public bool megaWindfury = false;//超级风怒
         public bool frozen = false;//冻结
@@ -138,7 +138,7 @@ namespace HREngine.Bots
 
                 return "{" + zonepos.ToString() + "} " + " (" + Angr + "/" + Hp + ") " + handcard.card.nameCN + "\n " +
                     (frozen ? "[冻结]" : "") + (!Ready || cantAttack ? "[无法攻击]" : "[可攻击]") + (extraAttacksThisTurn > 0 ? "[额外攻击次数:" + extraAttacksThisTurn + "]" : "") + (windfury ? "[风怒]" : "") + (megaWindfury ? "[超级风怒]" : "") + (taunt ? "[嘲讽]" : "")
-                    + (divineshild ? "[圣盾]" : "") + (stealth ? "[隐身]" : "") + (immune ? "[免疫]" : "") + (untouchable ? "[不可触碰]" : "") + (lifesteal ? "[吸血]" : "")
+                    + (divineShield ? "[圣盾]" : "") + (stealth ? "[隐身]" : "") + (immune ? "[免疫]" : "") + (untouchable ? "[不可触碰]" : "") + (lifesteal ? "[吸血]" : "")
                      + (dormant != 0 ? "[休眠(" + dormant.ToString() + ")]" : "") + (reborn ? "[复生]" : "") + (poisonous ? "[剧毒]" : "")
                       + (Spellburst ? "[法术迸发]" : "") + (HonorableKill ? "[荣誉击杀]" : "") + (Overkill ? "[超杀]" : "") + (Elusive ? "[扰魔]" : "" + (Aura ? "[光环]" : ""));
             }
@@ -250,7 +250,7 @@ namespace HREngine.Bots
             this.synergy = m.synergy;
             this.handcard = m.handcard;
             this.deathrattle2 = m.deathrattle2;
-            this.entitiyID = m.entitiyID;
+            this.entityID = m.entityID;
             this.zonepos = m.zonepos;
 
             this.allreadyAttacked = m.allreadyAttacked;
@@ -310,7 +310,7 @@ namespace HREngine.Bots
             this.taunt = m.taunt;
             this.wounded = m.wounded;
 
-            this.divineshild = m.divineshild;
+            this.divineShield = m.divineShield;
             this.windfury = m.windfury;
             this.frozen = m.frozen;
             this.stealth = m.stealth;
@@ -420,7 +420,7 @@ namespace HREngine.Bots
             this.taunt = m.taunt;
             this.wounded = m.wounded;
 
-            this.divineshild = m.divineshild;
+            this.divineShield = m.divineShield;
             this.windfury = m.windfury;
             this.frozen = m.frozen;
             this.stealth = m.stealth;
@@ -722,7 +722,7 @@ namespace HREngine.Bots
             bool woundedbefore = wounded;
             if (damage > 0) allreadyAttacked = true;
 
-            if (damage > 0 && divineshild)
+            if (damage > 0 && divineShield)
             {
                 p.minionLosesDivineShield(this);
                 if (!own && !dontCalcLostDmg && p.turnCounter == 0)
@@ -934,7 +934,7 @@ namespace HREngine.Bots
 
             if (p.diedMinions != null)
             {
-                GraveYardItem gyi = new GraveYardItem(handcard.card.cardIDenum, entitiyID, own, GraveYardItem.EnumGraveyardStatus.Died);
+                GraveYardItem gyi = new GraveYardItem(handcard.card.cardIDenum, entityID, own, GraveYardItem.EnumGraveyardStatus.Died);
                 p.diedMinions.Add(gyi);
             }
         }
@@ -1021,118 +1021,6 @@ namespace HREngine.Bots
             p.minionTransform(this, CardDB.Instance.getCardDataFromID(CardDB.cardIDEnum.CS2_tk1));
             this.Angr = Atk;
             this.Hp = this.maxHp = Hp;
-            return;
-
-            if (own)
-            {
-                p.spellpower -= spellpower;
-                if (this.taunt) p.anzOwnTaunt--;
-            }
-            else
-            {
-                p.enemyspellpower -= spellpower;
-                if (this.taunt) p.anzEnemyTaunt--;
-            }
-            spellpower = 0;
-
-            deathrattle2 = null;
-            p.minionGetOrEraseAllAreaBuffs(this, false);
-            //buffs
-            ancestralspirit = 0;
-            desperatestand = 0;
-            destroyOnOwnTurnStart = false;
-            destroyOnEnemyTurnStart = false;
-            destroyOnOwnTurnEnd = false;
-            destroyOnEnemyTurnEnd = false;
-            changeOwnerOnTurnStart = false;
-            conceal = false;
-            souloftheforest = 0;
-            stegodon = 0;
-            livingspores = 0;
-            explorershat = 0;
-            libramofwisdom = 0;
-
-            returnToHand = 0;
-            infest = 0;
-            deathrattle2 = null;
-            if (this.name == CardDB.cardNameEN.moatlurker && p.LurkersDB.ContainsKey(this.entitiyID)) p.LurkersDB.Remove(this.entitiyID);
-
-            ownBlessingOfWisdom = 0;
-            enemyBlessingOfWisdom = 0;
-            ownPowerWordGlory = 0;
-            enemyPowerWordGlory = 0;
-
-            // cantBeTargetedBySpellsOrHeroPowers = false;
-            cantAttackHeroes = false;
-            cantAttack = false;
-
-            charge = 0;
-            rush = 0;
-            hChoice = 0;
-            taunt = false;
-            divineshild = false;
-            windfury = false;
-            frozen = false;
-            stealth = false;
-            immune = false;
-            poisonous = false;
-            enchs = new List<CardDB.cardIDEnum>();
-            cantLowerHPbelowONE = false;
-            lifesteal = false;
-            dormant = 0;
-            outcast = false;
-            reborn = false;
-            //超杀
-            Overkill = false;
-            //荣耀击杀
-            HonorableKill = false;
-
-            //delete enrage (if minion is silenced the first time)
-            if (wounded && handcard.card.Enrage && !silenced)
-            {
-                handcard.card.sim_card.onEnrageStop(p, this);
-            }
-
-            //reset attack
-            Angr = handcard.card.Attack;
-            tempAttack = 0;//we dont toutch the adjacent buffs!
-
-
-            //reset hp and heal it
-            if (maxHp < handcard.card.Health)//minion has lower maxHp as his card -> heal his hp
-            {
-                Hp += handcard.card.Health - maxHp; //heal minion
-            }
-            maxHp = handcard.card.Health;
-            if (Hp > maxHp) Hp = maxHp;
-
-            if (!silenced)//minion WAS not silenced, deactivate his aura
-            {
-                handcard.card.sim_card.onAuraEnds(p, this);
-            }
-
-            silenced = true;
-            this.updateReadyness();
-            p.minionGetOrEraseAllAreaBuffs(this, true);
-            if (own)
-            {
-                p.tempTrigger.ownMinionsChanged = true;
-            }
-            else
-            {
-                p.tempTrigger.enemyMininsChanged = true;
-            }
-            if (this.shadowmadnessed)
-            {
-                this.shadowmadnessed = false;
-                p.shadowmadnessed--;
-                p.minionGetControlled(this, !own, false);
-            }
-
-            if (this.handcard.card.nameCN == CardDB.cardNameCN.暮光幼龙)
-            {
-                this.Hp = 1;
-            }
         }
         //攻击之后的状态
         public Minion GetTargetForMinionWithSurvival(Playfield p, bool own)
@@ -1407,7 +1295,7 @@ namespace HREngine.Bots
                    cardClass == other.cardClass &&
                    synergy == other.synergy &&
                    EqualityComparer<Handmanager.Handcard>.Default.Equals(handcard, other.handcard) &&
-                   entitiyID == other.entitiyID &&
+                   entityID == other.entityID &&
                    zonepos == other.zonepos &&
                    playedFromHand == other.playedFromHand &&
                    playedThisTurn == other.playedThisTurn &&
@@ -1438,7 +1326,7 @@ namespace HREngine.Bots
                    Ready == other.Ready &&
                    taunt == other.taunt &&
                    wounded == other.wounded &&
-                   divineshild == other.divineshild &&
+                   divineShield == other.divineShield &&
                    windfury == other.windfury &&
                    megaWindfury == other.megaWindfury &&
                    frozen == other.frozen &&
@@ -1523,7 +1411,7 @@ namespace HREngine.Bots
             hashCode = hashCode * -1521134295 + cardClass.GetHashCode();
             hashCode = hashCode * -1521134295 + synergy.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<Handmanager.Handcard>.Default.GetHashCode(handcard);
-            hashCode = hashCode * -1521134295 + entitiyID.GetHashCode();
+            hashCode = hashCode * -1521134295 + entityID.GetHashCode();
             hashCode = hashCode * -1521134295 + zonepos.GetHashCode();
             hashCode = hashCode * -1521134295 + playedFromHand.GetHashCode();
             hashCode = hashCode * -1521134295 + playedThisTurn.GetHashCode();
@@ -1554,7 +1442,7 @@ namespace HREngine.Bots
             hashCode = hashCode * -1521134295 + Ready.GetHashCode();
             hashCode = hashCode * -1521134295 + taunt.GetHashCode();
             hashCode = hashCode * -1521134295 + wounded.GetHashCode();
-            hashCode = hashCode * -1521134295 + divineshild.GetHashCode();
+            hashCode = hashCode * -1521134295 + divineShield.GetHashCode();
             hashCode = hashCode * -1521134295 + windfury.GetHashCode();
             hashCode = hashCode * -1521134295 + megaWindfury.GetHashCode();
             hashCode = hashCode * -1521134295 + frozen.GetHashCode();
