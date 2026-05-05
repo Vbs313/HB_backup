@@ -1,4 +1,4 @@
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
     using System;
     using System.Collections.Generic;
@@ -226,7 +226,7 @@ namespace HREngine.Bots
                         if (target.handcard.card.deathrattle) return 0;
                     }
 
-                    if (target.Angr <= target.handcard.card.Attack && target.maxHp <= target.handcard.card.Health && !target.taunt && !target.windfury && !target.divineshild && !target.poisonous && !target.lifesteal && !this.specialMinions.ContainsKey(name))
+                    if (target.Angr <= target.handcard.card.Attack && target.maxHp <= target.handcard.card.Health && !target.taunt && !target.windfury && !target.divineShield && !target.poisonous && !target.lifesteal && !this.specialMinions.ContainsKey(name))
                     {
                         if (name == CardDB.cardNameEN.keeperofthegrove) return 500;
                         return 30;

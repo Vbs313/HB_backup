@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -146,17 +146,17 @@ public class RuntimeCode
                 Entity entity = card.GetEntity();
                 string nameCN = card.GetName();
                 string cardId = card.GetCardId();
-                int entitiyID = card.GetEntityId();
+                int entityID = card.GetEntityId();
                 Zone tAG_ZONE = card.GetZone();
 
-                Log.InfoFormat("实体id {2}  {0} {1} 位置:{3} ", nameCN, cardId, entitiyID, tAG_ZONE);
+                Log.InfoFormat("实体id {2}  {0} {1} 位置:{3} ", nameCN, cardId, entityID, tAG_ZONE);
                 var allTags = Enum.GetValues(typeof(GAME_TAG));
 
                 foreach (GAME_TAG tag in allTags)
                 {
                     int tagValue = entity.GetTag(tag);
                     if (tagValue != 0)
-                        Log.WarnFormat("{0} (ID:{1}) 标签 {2} = {3} 实体id {4}", nameCN, cardId, tag.ToString(), tagValue, entitiyID);
+                        Log.WarnFormat("{0} (ID:{1}) 标签 {2} = {3} 实体id {4}", nameCN, cardId, tag.ToString(), tagValue, entityID);
                 }
 
             }
@@ -498,7 +498,7 @@ public class RuntimeCode
 
                     string nameCN = entity.GetName();
                     string cardId = entity.GetCardId();
-                    int entitiyID = entity.GetEntityId();
+                    int entityID = entity.GetEntityId();
                     TAG_ZONE tAG_ZONE = entity.GetZone();
                     TAG_CARDTYPE tAG_CARDTYPE = entity.GetCardType();
                     // if (cardId == "WORK_042") {
@@ -509,13 +509,13 @@ public class RuntimeCode
                     // }
                     if (tAG_ZONEs.Contains(tAG_ZONE))
                     {
-                        Log.InfoFormat("实体id {2}  {0} {1} 位置:{3} ", nameCN, cardId, entitiyID, tAG_ZONE);
+                        Log.InfoFormat("实体id {2}  {0} {1} 位置:{3} ", nameCN, cardId, entityID, tAG_ZONE);
                         /*
                         foreach (GAME_TAG tag in allTags)
                                     {
                                         int tagValue = entity.GetTag(tag);
                                         if (tagValue != 0)
-                                            Log.InfoFormat("{0} {1} tag:{5} {2} = {3} ", nameCN, cardId, tag.ToString(), tagValue, entitiyID,(int)tag);
+                                            Log.InfoFormat("{0} {1} tag:{5} {2} = {3} ", nameCN, cardId, tag.ToString(), tagValue, entityID,(int)tag);
                                     } */
 
                         var allTags = Enum.GetValues(typeof(GAME_TAG));
@@ -528,7 +528,7 @@ public class RuntimeCode
                                 // case TAG_CARDTYPE.LOCATION:
                                 // case TAG_CARDTYPE.HERO:
                                 {
-                                    // Log.InfoFormat("{0} (ID:{1})  实体id {2} 是否睡着了{3}", nameCN, cardId, entitiyID, entity.IsAsleep());
+                                    // Log.InfoFormat("{0} (ID:{1})  实体id {2} 是否睡着了{3}", nameCN, cardId, entityID, entity.IsAsleep());
                                     // Log.InfoFormat("{0} (ID:{1})  是否有复制亡语{2}", nameCN, cardId, entity.GetTag(GAME_TAG.DEATHRATTLE));
                                     // Log.InfoFormat("{0} (ID:{1})  选择角色类型{2}", nameCN, cardId, entity.GetTag(1692));
                                     // Log.InfoFormat("{0} (ID:{1})  使用条件{2}", nameCN, cardId, GameState.GetErrorType(entity));
@@ -560,7 +560,7 @@ public class RuntimeCode
                                     {
                                         int tagValue = entity.GetTag(tag);
                                         if (tagValue != 0)
-                                            Log.WarnFormat("附魔 实体id {4} {0} {1} 标签 {2} = {3} ", nameCN, cardId, tag.ToString(), tagValue, entitiyID);
+                                            Log.WarnFormat("附魔 实体id {4} {0} {1} 标签 {2} = {3} ", nameCN, cardId, tag.ToString(), tagValue, entityID);
                                     }
                                     continue;
                                 }
@@ -573,7 +573,7 @@ public class RuntimeCode
                     {
                         continue;
                     }
-                    // Log.WarnFormat("{0} (ID:{1})  实体id {2} ERROR_TYPE {3}", nameCN, cardId, entitiyID, gameState.GetErrorType(entity));
+                    // Log.WarnFormat("{0} (ID:{1})  实体id {2} ERROR_TYPE {3}", nameCN, cardId, entityID, gameState.GetErrorType(entity));
                 }
 
             }
@@ -622,14 +622,14 @@ public class RuntimeCode
                         {
                             String nameCN = entity.GetName();
                             String cardId = entity.GetCardId();
-                            int entitiyID = entity.GetEntityId();
+                            int entityID = entity.GetEntityId();
                             var allTags = Enum.GetValues(typeof(GAME_TAG));
 
                             foreach (GAME_TAG tag in allTags)
                             {
                                 int tagValue = entity.GetTag(tag);
                                 if (tagValue != 0)
-                                    Log.WarnFormat("{0} (ID:{1}) 标签 {2} = {3} 实体id {4}", nameCN, cardId, tag.ToString(), tagValue, entitiyID);
+                                    Log.WarnFormat("{0} (ID:{1}) 标签 {2} = {3} 实体id {4}", nameCN, cardId, tag.ToString(), tagValue, entityID);
                             }
                         }
                     }

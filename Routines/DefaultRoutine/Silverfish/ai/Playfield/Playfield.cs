@@ -743,7 +743,7 @@ namespace HREngine.Bots
                         bool another = false;
                         foreach (Minion mnn in this.ownMinions)
                         {
-                            if (mnn.name == CardDB.cardNameEN.garrisoncommander && mnn.entitiyID != m.entitiyID) another = true;
+                            if (mnn.name == CardDB.cardNameEN.garrisoncommander && mnn.entityID != m.entityID) another = true;
                         }
                         if (!another) this.ownHeroPowerAllowedQuantity++;
                         continue;
@@ -906,7 +906,7 @@ namespace HREngine.Bots
                         bool another = false;
                         foreach (Minion mnn in this.enemyMinions)
                         {
-                            if (mnn.name == CardDB.cardNameEN.garrisoncommander && mnn.entitiyID != m.entitiyID) another = true;
+                            if (mnn.name == CardDB.cardNameEN.garrisoncommander && mnn.entityID != m.entityID) another = true;
                         }
                         if (!another) this.enemyHeroPowerAllowedQuantity++;
                         continue;

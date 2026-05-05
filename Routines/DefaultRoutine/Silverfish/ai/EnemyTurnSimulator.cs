@@ -1,4 +1,4 @@
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
     using System;
     using System.Collections.Generic;
@@ -484,7 +484,7 @@ namespace HREngine.Bots
                         if (p.enemyAnzCards >= 2) p.drawACard(CardDB.cardNameEN.unknown, false);
                         continue;
                     case CardDB.cardNameEN.cobaltguardian:
-                        if (p.enemyAnzCards >= 2) m.divineshild = true;
+                        if (p.enemyAnzCards >= 2) m.divineShield = true;
                         continue;
                     case CardDB.cardNameEN.knifejuggler:
                         anz = Math.Min(p.enemyAnzCards, (int)p.enemyMaxMana/2);

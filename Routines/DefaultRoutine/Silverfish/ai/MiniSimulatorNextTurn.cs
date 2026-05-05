@@ -1,4 +1,4 @@
-namespace HREngine.Bots
+﻿namespace HREngine.Bots
 {
     using System;
     using System.Collections.Generic;
@@ -400,7 +400,7 @@ namespace HREngine.Bots
                         if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                         {
                             // 如果属性相同，不添加
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && mnn.lifesteal == m.lifesteal) goingtoadd = false;
+                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineShield == m.divineShield && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && mnn.lifesteal == m.lifesteal) goingtoadd = false;
                             continue;
                         }
 
@@ -413,7 +413,7 @@ namespace HREngine.Bots
                                 continue;
                             }
                             // 如果名称相同，检查属性是否相同
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && mnn.lifesteal == m.lifesteal) goingtoadd = false;
+                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineShield == m.divineShield && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && mnn.lifesteal == m.lifesteal) goingtoadd = false;
                             continue;
                         }
                     }

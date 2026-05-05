@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -590,7 +590,7 @@ namespace HREngine.Bots
             {
                 //this.mainTurnSimulator.printPosmoves();
                 // 模拟全程并打印详细信息
-                simmulateWholeTurn(bt);
+                simulateWholeTurn(bt);
                 // 记录计算时间
                 help.logg("calculated " + calcTime);
             }
@@ -603,7 +603,7 @@ namespace HREngine.Bots
         /// 模拟最优行动并打印详细的游戏状态信息
         /// </summary>
         /// <param name="bt">牌面测试器</param>
-        public void simmulateWholeTurn(BoardTester bt)  // 这里影响输出.result文件
+        public void simulateWholeTurn(BoardTester bt)  // 这里影响输出.result文件
         {
 #if APPLICATION_MODE
             // 清除UI中的行动列表
@@ -647,7 +647,7 @@ namespace HREngine.Bots
                 enemyVal.Append(m.megaWindfury ? "[超级风怒]" : "");
                 enemyVal.Append(m.taunt ? "[嘲讽]" : "");
                 enemyVal.Append(m.rush > 0 ? "[突袭]" : "");
-                enemyVal.Append(m.divineshild ? "[圣盾]" : "");
+                enemyVal.Append(m.divineShield ? "[圣盾]" : "");
                 enemyVal.Append(m.lifesteal ? "[吸血]" : "");
                 enemyVal.Append(m.poisonous ? "[剧毒]" : "");
                 enemyVal.Append(m.reborn ? "[复生]" : "");
@@ -664,7 +664,7 @@ namespace HREngine.Bots
                 myVal.Append(m.megaWindfury ? "[超级风怒]" : "");
                 myVal.Append(m.taunt ? "[嘲讽]" : "");
                 myVal.Append(m.rush > 0 ? "[突袭]" : "");
-                myVal.Append(m.divineshild ? "[圣盾]" : "");
+                myVal.Append(m.divineShield ? "[圣盾]" : "");
                 myVal.Append(m.lifesteal ? "[吸血]" : "");
                 myVal.Append(m.poisonous ? "[剧毒]" : "");
                 myVal.Append(m.reborn ? "[复生]" : "");
@@ -774,7 +774,7 @@ namespace HREngine.Bots
                 enemyVal.Append(m.megaWindfury ? "[超级风怒]" : "");
                 enemyVal.Append(m.taunt ? "[嘲讽]" : "");
                 enemyVal.Append(m.rush > 0 ? "[突袭]" : "");
-                enemyVal.Append(m.divineshild ? "[圣盾]" : "");
+                enemyVal.Append(m.divineShield ? "[圣盾]" : "");
                 enemyVal.Append(m.lifesteal ? "[吸血]" : "");
                 enemyVal.Append(m.poisonous ? "[剧毒]" : "");
                 enemyVal.Append(m.reborn ? "[复生]" : "");
@@ -791,7 +791,7 @@ namespace HREngine.Bots
                 myVal.Append(m.megaWindfury ? "[超级风怒]" : "");
                 myVal.Append(m.taunt ? "[嘲讽]" : "");
                 myVal.Append(m.rush > 0 ? "[突袭]" : "");
-                myVal.Append(m.divineshild ? "[圣盾]" : "");
+                myVal.Append(m.divineShield ? "[圣盾]" : "");
                 myVal.Append(m.lifesteal ? "[吸血]" : "");
                 myVal.Append(m.poisonous ? "[剧毒]" : "");
                 myVal.Append(m.reborn ? "[复生]" : "");
@@ -824,7 +824,7 @@ namespace HREngine.Bots
         /// 模拟全程并打印
         /// 模拟最优行动并打印详细信息
         /// </summary>
-        public void simmulateWholeTurnandPrint()
+        public void simulateWholeTurnAndPrint()
         {
             // 打印标题和分隔线
             help.ErrorLog("###################################");
@@ -896,21 +896,21 @@ namespace HREngine.Bots
                 // 更新我方随从的实体ID
                 foreach (Minion m in this.nextMoveGuess.ownMinions)
                 {
-                    if (m.entitiyID == old) m.entitiyID = newone;
+                    if (m.entityID == old) m.entityID = newone;
                 }
                 // 更新敌方随从的实体ID
                 foreach (Minion m in this.nextMoveGuess.enemyMinions)
                 {
-                    if (m.entitiyID == old) m.entitiyID = newone;
+                    if (m.entityID == old) m.entityID = newone;
                 }
             }
             // 更新最优行动列表中行动的实体ID
             foreach (Action a in this.bestActions)
             {
                 // 更新行动中的我方实体ID
-                if (a.own != null && a.own.entitiyID == old) a.own.entitiyID = newone;
+                if (a.own != null && a.own.entityID == old) a.own.entityID = newone;
                 // 更新行动中的目标实体ID
-                if (a.target != null && a.target.entitiyID == old) a.target.entitiyID = newone;
+                if (a.target != null && a.target.entityID == old) a.target.entityID = newone;
                 // 更新行动中的卡牌实体ID
                 if (a.hc != null && a.hc.entity == old) a.hc.entity = newone;
             }

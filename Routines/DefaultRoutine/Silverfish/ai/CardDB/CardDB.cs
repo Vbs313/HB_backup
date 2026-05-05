@@ -1916,7 +1916,7 @@ namespace HREngine.Bots
                     foreach (Card c in instance.cardlist)
                     {
                         if (c.cardIDenum != cardIDEnum.None)  // 增加非None判断
-                            c.sim_card = CardHelper.GetCardSimulation(c.cardIDenum);
+                            c.sim_card = GetCardSimulation(c.cardIDenum);
                         if (c.sim_card == null) continue;
                         foreach (var pr in c.sim_card.GetPlayReqs()) pr.UpdateCardAttr(c);
                     }

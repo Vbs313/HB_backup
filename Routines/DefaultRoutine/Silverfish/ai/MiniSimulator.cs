@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
@@ -577,7 +577,7 @@ namespace HREngine.Bots
                         if (a.actionType == actionEnum.useTitanAbility)
                         {
                             // 生成泰坦技能键
-                            string titanSkillKey = a.own.entitiyID + "-" + a.titanAbilityNO;
+                            string titanSkillKey = a.own.entityID + "-" + a.titanAbilityNO;
                             // 如果是第一个技能，记录
                             if (usedTitanSkills.Length == 0)
                             {
@@ -598,8 +598,8 @@ namespace HREngine.Bots
                             if (a.own != null)
                             {
                                 // 检查是否已经使用过相同的地标
-                                bool hasSameEntitiyID = p.playactions.Any(temp => temp.own != null && temp.own.entitiyID == a.own.entitiyID);
-                                if (hasSameEntitiyID)
+                                bool hasSameentityID = p.playactions.Any(temp => temp.own != null && temp.own.entityID == a.own.entityID);
+                                if (hasSameentityID)
                                 {
                                     continue; //当前地标已经模拟使用
                                 }
@@ -885,7 +885,7 @@ namespace HREngine.Bots
 
                         if ((!isSpecial || (isSpecial && m.silenced)) && (!otherisSpecial || (otherisSpecial && mnn.silenced))) // both are not special, if they are the same, dont add
                         {
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && mnn.lifesteal == m.lifesteal) goingtoadd = false;
+                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineShield == m.divineShield && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && mnn.lifesteal == m.lifesteal) goingtoadd = false;
                             continue;
                         }
 
@@ -898,7 +898,7 @@ namespace HREngine.Bots
 
                             // 同名随从不重复添加
                             // same name -> test whether they are equal
-                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineshild == m.divineshild && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && mnn.lifesteal == m.lifesteal && mnn.Spellburst == m.Spellburst) goingtoadd = false;
+                            if (mnn.Angr == m.Angr && mnn.Hp == m.Hp && mnn.divineShield == m.divineShield && mnn.taunt == m.taunt && mnn.poisonous == m.poisonous && mnn.lifesteal == m.lifesteal && mnn.Spellburst == m.Spellburst) goingtoadd = false;
                             continue;
                         }
 
