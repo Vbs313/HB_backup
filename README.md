@@ -303,6 +303,53 @@ CompilingDLLs.sln: ✅ 成功 | 0 错误 | 0 警告 | 1.26s
 
 ---
 
+## 代码质量重构 ✅ 已完成 (2026-05-05)
+
+对 Silverfish AI 引擎（不含 cards/ 目录）进行了系统性代码质量改进，分三个阶段执行。
+
+### Phase 1 - 关键修复（6项）
+
+| # | 修复项 | 文件 | 变更 | 影响 |
+|---|--------|------|------|------|
+| 1 | 删除空文件 | BehaviorControl.cs, BehaviorRush.cs, BehaviourMana.cs | 删除 3 个无功能文件 | 清理死代码 |
+| 2 | "perist" 拼写 Bug | Hrtprozis.cs:666 | `perist` → `priest` | 修复牧师英雄职业名识别错误 |
+| 3 | becomeSilence 死代码 | Minion.cs:1024-1114 | 删除 90+ 行不可达代码 | 消除 `return` 后的死代码 |
+| 4 | DK 留牌变量递增 Bug | Behavior丨标准丨快攻DK.cs:75 | `堕寒男爵` → `秘迹观测者` | 修复留牌计数逻辑错误 |
+| 5 | SirFinley 不可达代码 | Behavior丨通用丨不设惩罚.cs:282 | 删除 `return -1;` | 恢复 SirFinley 技能优先级计算 |
+| 6 | 锁喉剑鱼贼永假条件 | Behavior丨狂野丨锁喉剑鱼贼.cs:57 | `&&` → `||` | 修复逻辑运算符错误 |
+
+### Phase 2 - 中等优先级改进（3项）
+
+| # | 改进项 | 影响范围 | 变更 |
+|---|--------|----------|------|
+| 1 | 标识符拼写修复 | 400+ 文件 | `divineshild` → `divineShield`, `entitiyID` → `entityID`, `simmulateWholeTurn` → `simulateWholeTurn` |
+| 2 | 硬编码路径修复 | 2 文件 | AiTest.cs, AutoJudge.cs 使用动态路径检测，移除开发者特定路径 |
+| 3 | 删除死代码 | 2 文件 | Playfield.struct.cs（全注释文件）, txt.txt（调试转储文件） |
+
+### Phase 3 - 低优先级改进（2项）
+
+| # | 改进项 | 文件 | 变更 |
+|---|--------|------|------|
+| 1 | Mulligan 辅助方法 | Behavior.cs | 添加 `keepOneDiscardRest()` 和 `discardAll()` 辅助方法，消除 31 处重复的留牌逻辑 |
+| 2 | SimTypesDict 合并 | CardDB.Helper.cs, CardHelper.cs | 将英雄皮肤映射逻辑合并到 CardDB.Helper.cs，删除冗余的 CardHelper.cs |
+
+### 删除的文件（6个）
+
+- `BehaviorControl.cs` - 空文件（仅 BOM）
+- `BehaviorRush.cs` - 空文件（仅 BOM）
+- `BehaviourMana.cs` - 完全空文件
+- `Playfield.struct.cs` - 全部代码已注释
+- `txt.txt` - 调试转储文件
+- `CardHelper.cs` - 功能已合并到 CardDB.Helper.cs
+
+### 构建验证
+
+```
+CompilingDLLs.sln: ✅ 成功 | 0 错误 | 60 警告 | 6.94s
+```
+
+---
+
 ## 记录用
 
 - 法力水晶上限和手牌上限
