@@ -64,9 +64,11 @@
             if (rootfield.bestEnemyPlay == null)
             {
                 bool havedonesomething = true;
+                // 归还旧场面的 Playfield 对象到池中
+                foreach (var oldPf in posmoves) PlayfieldPool.Return(oldPf);
                 posmoves.Clear();
 
-                posmoves.Add(new Playfield(rootfield));
+                posmoves.Add(PlayfieldPool.Rent(rootfield));
                 posmoves[0].isLethalCheck = false; 
                 posmoves[0].startTurn();
                 rootfield.guessingHeroHP = posmoves[0].guessingHeroHP;
@@ -90,8 +92,10 @@
                     posmoves[0].triggerCardsChanged(false);
                     if (oldval < newval)
                     {
+                        // 归还旧场面的 Playfield 对象到池中
+                        foreach (var oldPf in posmoves) PlayfieldPool.Return(oldPf);
                         posmoves.Clear();
-                        posmoves.Add(new Playfield(rootfield));
+                        posmoves.Add(PlayfieldPool.Rent(rootfield));
                         posmoves[0].startTurn();
                     }
                 }
@@ -101,6 +105,9 @@
                     if (posmoves[0].value >= -2000000) rootfield.value -= 2000000;
                     else rootfield.value = -2000000;
 
+                    // 归还当前租用的 Playfield
+                    PlayfieldPool.Return(posmoves[0]);
+                    posmoves.Clear();
                     return;
                 }
 
@@ -114,7 +121,7 @@
                     foreach (Minion trgt in trgts)
                     {
                         Action a = new Action(actionEnum.useHeroPower, posmoves[0].enemyHeroAblility, null, 0, trgt, abilityPenality, 0);
-                        Playfield pf = new Playfield(posmoves[0]);
+                        Playfield pf = PlayfieldPool.Rent(posmoves[0]);
                         pf.doAction(a);
                         posmoves.Add(pf);
                     }
@@ -149,11 +156,12 @@
                         foreach (Action a in actions)
                         {
                             havedonesomething = true;
-                            Playfield pf = new Playfield(p);
+                            Playfield pf = PlayfieldPool.Rent(p);
                             pf.doAction(a);
                             posmoves.Add(pf);
                             boardcount++;
                         }
+                        ActionListPool.Return(actions);
 
                         p.endTurn();
                         p.complete = true;
@@ -225,7 +233,7 @@
 
                 if (twotsamount > 0 || (rootfield.isLethalCheck && berserkIfCanFinishNextTour > 0))
                 {
-                    rootfield.bestEnemyPlay = new Playfield(bestplay);
+                    rootfield.bestEnemyPlay = PlayfieldPool.Rent(bestplay);
                     rootfield.bestEnemyPlay.value = bestval;
                 }
             }

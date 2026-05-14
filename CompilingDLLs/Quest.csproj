@@ -35,7 +35,7 @@
     <!-- 不优化代码 -->
     <Optimize>false</Optimize>
     <!-- 输出路径（Debug 输出到 CompilingDLLs 目录） -->
-    <OutputPath>.\</OutputPath>
+    <OutputPath>..\CompiledAssemblies\</OutputPath>
     <!-- 中间输出路径 -->
     <BaseIntermediateOutputPath>..\obj\Quest\</BaseIntermediateOutputPath>
     <!-- 定义常量 -->

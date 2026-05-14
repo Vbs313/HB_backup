@@ -136,7 +136,7 @@
 
             // 清空可能的游戏状态列表，添加初始状态
             this.posmoves.Clear();
-            this.posmoves.Add(new Playfield(playf));
+            this.posmoves.Add(PlayfieldPool.Rent(playf));
 
             // 标记是否还有操作可做
             bool havedonesomething = true;
@@ -177,14 +177,21 @@
                     {
                         // 标记有操作可做
                         havedonesomething = true;
-                        // 创建新的游戏状态并执行动作
-                        Playfield pf = new Playfield(p);
+                        // 从对象池获取游戏状态副本（复用，减少GC压力）
+                        Playfield pf = PlayfieldPool.Rent(p);
                         pf.doAction(a);
                         // 如果我方英雄存活，添加到可能的状态列表
-                        if (pf.ownHero.Hp > 0) this.posmoves.Add(pf);
-                        // 增加已计算场面数
+                        if (pf.ownHero.Hp > 0)
+                        {
+                            this.posmoves.Add(pf);
+                        }
+                        else
+                        {
+                            PlayfieldPool.Return(pf);
+                        }
                         if (totalboards > 0) this.calculated++;
                     }
+                    ActionListPool.Return(actions);
 
                     // 结束当前回合
                     p.endTurn();

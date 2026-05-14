@@ -35,7 +35,7 @@
     <!-- 不优化代码 -->
     <Optimize>false</Optimize>
     <!-- 输出路径（Debug 输出到 CompilingDLLs 目录） -->
-    <OutputPath>.\</OutputPath>
+    <OutputPath>..\CompiledAssemblies\</OutputPath>
     <!-- 中间输出路径 -->
     <BaseIntermediateOutputPath>..\obj\Monitor\</BaseIntermediateOutputPath>
     <!-- 定义常量 -->
@@ -107,7 +107,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.ServiceModel" />
+
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />

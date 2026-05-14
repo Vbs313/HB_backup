@@ -567,11 +567,12 @@ namespace HREngine.Bots
                     //读取到actions后接下来对每个步骤进行模拟
                     //从而得到操作之后的场面并且计算val值
                     // 如果需要打印规则，保存结束回合状态
-                    if (printRules > 0) p.endTurnState = new Playfield(p);
+                    if (printRules > 0) p.endTurnState = PlayfieldPool.Rent(p);
                     // 记录已经模拟过的泰坦技能动作
                     var usedTitanSkills = "";
                     // 遍历每个动作
                     foreach (Action a in actions)  // 到这步 a.penalty已经计算好了
+                    try
                     {
                         // 检查是否为泰坦技能动作，并检查是否已经模拟过
                         if (a.actionType == actionEnum.useTitanAbility)
@@ -605,13 +606,21 @@ namespace HREngine.Bots
                                 }
                             }
                         }
-                        // 创建游戏状态副本
-                        Playfield pf = new Playfield(p);
+                        // 从对象池获取游戏状态副本（复用，减少GC压力）
+                        Playfield pf = PlayfieldPool.Rent(p);
                         // 执行动作
                         pf.doAction(a);
                         // 如果执行后我方英雄生命值大于0且惩罚值小于500，添加到下一层游戏状态
-                        if (pf.ownHero.Hp > 0 && pf.evaluatePenality < 500) p.nextPlayfields.Add(pf);
+                        if (pf.ownHero.Hp > 0 && pf.evaluatePenality < 500)
+                        {
+                            p.nextPlayfields.Add(pf);
+                        }
+                        else
+                        {
+                            PlayfieldPool.Return(pf);
+                        }
                     }
+                    finally { ActionListPool.Return(actions); }
                 }
 
                 // 如果是斩杀检查

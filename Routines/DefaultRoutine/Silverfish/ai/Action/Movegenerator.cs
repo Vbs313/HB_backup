@@ -51,7 +51,7 @@
         /// <returns>返回所有可能的动作列表</returns>
         public List<Action> getMoveList(Playfield p, bool usePenalityManager, bool useCutingTargets, bool own)
         {
-            List<Action> resultAction = new List<Action>();
+            List<Action> resultAction = ActionListPool.Rent();
 
             // 游戏终止条件：游戏已结束或己方英雄死亡，返回空列表
             if (p.complete || p.ownHero.Hp <= 0)
