@@ -37,6 +37,20 @@ namespace HREngine.Bots
         }
 
         /// <summary>
+        /// 预热对象池，创建指定数量的 Playfield 实例，避免 AI 搜索初期触发大量 new 分配。
+        /// </summary>
+        /// <param name="count">预热实例数量</param>
+        public static void Prewarm(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var pf = new Playfield();
+                pf.ClearForPool();
+                _pool.Add(pf);
+            }
+        }
+
+        /// <summary>
         /// 清空对象池（用于测试或重置）。
         /// </summary>
         public static void Clear()

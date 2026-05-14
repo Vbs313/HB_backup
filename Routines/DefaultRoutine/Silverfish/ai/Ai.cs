@@ -171,6 +171,11 @@ namespace HREngine.Bots
         {
             this.nextMoveGuess = new Playfield { mana = -100 };
 
+            // 预热对象池: 避免 AI 搜索初期触发大量 new 分配
+            PlayfieldPool.Prewarm(100);
+            MinionPool.Prewarm(200);
+            HandcardPool.Prewarm(100);
+
             this.mainTurnSimulator = new MiniSimulator(maxdeep, maxwide, 0); // 0 for unlimited 对每层搜索数量没有限制
             this.mainTurnSimulator.setPrintingstuff(true);
 

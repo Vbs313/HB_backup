@@ -1532,9 +1532,11 @@ namespace HREngine.Bots
                 this.mana = p.enemyMaxMana;
 
                 this.ownMinions.Clear();
-                addMinionsReal(prozis.ownMinions, this.ownMinions);
+                foreach (var m in prozis.ownMinions)
+                    this.ownMinions.Add(MinionPool.Rent(m));
                 this.enemyMinions.Clear();
-                addMinionsReal(prozis.enemyMinions, this.enemyMinions);
+                foreach (var m in prozis.enemyMinions)
+                    this.enemyMinions.Add(MinionPool.Rent(m));
 
                 this.ownHero = new Minion(prozis.enemyHero);
                 this.enemyHero = new Minion(prozis.ownHero);
@@ -1600,15 +1602,18 @@ namespace HREngine.Bots
                 this.ownMaxMana = p.ownMaxMana;
                 this.enemyMaxMana = p.enemyMaxMana;
 
-                // Reuse ownMinions list: clear and repopulate
+                // Reuse ownMinions list: clear and repopulate from pool
                 this.ownMinions.Clear();
-                addMinionsReal(p.ownMinions, this.ownMinions);
+                foreach (var m in p.ownMinions)
+                    this.ownMinions.Add(MinionPool.Rent(m));
                 this.enemyMinions.Clear();
-                addMinionsReal(p.enemyMinions, this.enemyMinions);
+                foreach (var m in p.enemyMinions)
+                    this.enemyMinions.Add(MinionPool.Rent(m));
 
-                // Reuse owncards list
+                // Reuse owncards list: repopulate from pool
                 this.owncards.Clear();
-                addCardsReal(p.owncards);
+                foreach (var hc in p.owncards)
+                    this.owncards.Add(HandcardPool.Rent(hc));
 
                 this.ownHero = new Minion(p.ownHero);
                 this.enemyHero = new Minion(p.enemyHero);
@@ -1864,11 +1869,18 @@ namespace HREngine.Bots
         /// </summary>
         public void ClearForPool()
         {
-            // 清空所有列表（保留分配的对象）
-            this.nextPlayfields.Clear();
+            // 将 Minion 对象归还 MinionPool，再清空列表
+            foreach (var m in this.ownMinions) MinionPool.Return(m);
             this.ownMinions.Clear();
+            foreach (var m in this.enemyMinions) MinionPool.Return(m);
             this.enemyMinions.Clear();
+
+            // 将 Handcard 对象归还 HandcardPool，再清空列表
+            foreach (var hc in this.owncards) HandcardPool.Return(hc);
             this.owncards.Clear();
+
+            // 清空其余列表（保留分配的对象）
+            this.nextPlayfields.Clear();
             this.playactions.Clear();
             this.ownSecretsIDList.Clear();
             this.enemySecretList.Clear();

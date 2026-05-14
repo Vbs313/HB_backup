@@ -459,6 +459,270 @@ namespace HREngine.Bots
             this.CooldownTurn = m.CooldownTurn;
         }
 
+        /// <summary>
+        /// 将 source 的所有字段复制到当前实例中（复用现有对象，不分配新内存）。
+        /// 等价于拷贝构造函数，但作用于已存在的 Minion 实例。
+        /// </summary>
+        public void CopyFrom(Minion m)
+        {
+            //dont silence----------------------------
+            this.anzGotDmg = m.anzGotDmg;
+            this.GotDmgValue = m.GotDmgValue;
+            this.anzGotHealed = m.anzGotHealed;
+            this.GotHealedValue = m.GotHealedValue;
+
+            this.gotInspire = m.gotInspire;
+            this.isHero = m.isHero;
+            this.own = m.own;
+
+            this.name = m.name;
+            this.nameCN = m.nameCN;
+            this.cardId = m.cardId;
+            this.cardClass = m.cardClass;
+            this.synergy = m.synergy;
+            this.handcard = m.handcard;
+            this.deathrattle2 = m.deathrattle2;
+            this.entityID = m.entityID;
+            this.zonepos = m.zonepos;
+
+            this.allreadyAttacked = m.allreadyAttacked;
+
+            this.playedFromHand = m.playedFromHand;
+            this.playedThisTurn = m.playedThisTurn;
+            this.playedPrevTurn = m.playedPrevTurn;
+            this.numAttacksThisTurn = m.numAttacksThisTurn;
+            this.extraAttacksThisTurn = m.extraAttacksThisTurn;
+            this.ShowSleepZZZOverride = m.ShowSleepZZZOverride;
+            this.immuneWhileAttacking = m.immuneWhileAttacking;
+            this.TAG_SCRIPT_DATA_NUM_1 = m.TAG_SCRIPT_DATA_NUM_1;
+            this.TAG_SCRIPT_DATA_NUM_2 = m.TAG_SCRIPT_DATA_NUM_2;
+            this.MODULAR_ENTITY_PART_1 = m.MODULAR_ENTITY_PART_1;
+            this.MODULAR_ENTITY_PART_2 = m.MODULAR_ENTITY_PART_2;
+            this.cantAttackHeroes = m.cantAttackHeroes;
+            this.cantAttack = m.cantAttack;
+            this.nonKeyWordCharge = m.nonKeyWordCharge;
+
+            this.shadowmadnessed = m.shadowmadnessed;
+
+            this.ancestralspirit = m.ancestralspirit;
+            this.desperatestand = m.desperatestand;
+            this.destroyOnOwnTurnStart = m.destroyOnOwnTurnStart;
+            this.destroyOnEnemyTurnStart = m.destroyOnEnemyTurnStart;
+            this.destroyOnOwnTurnEnd = m.destroyOnOwnTurnEnd;
+            this.destroyOnEnemyTurnEnd = m.destroyOnEnemyTurnEnd;
+            this.changeOwnerOnTurnStart = m.changeOwnerOnTurnStart;
+
+            this.conceal = m.conceal;
+            this.souloftheforest = m.souloftheforest;
+            this.stegodon = m.stegodon;
+            this.greybud = m.greybud;
+            this.finalsession = m.finalsession;
+            this.infected = m.infected;
+            this.livingspores = m.livingspores;
+            this.explorershat = m.explorershat;
+            this.libramofwisdom = m.libramofwisdom;
+            this.itsnecrolit = m.itsnecrolit;
+
+            this.returnToHand = m.returnToHand;
+            this.infest = m.infest;
+            this.sheepmask = m.sheepmask;
+            this.ownBlessingOfWisdom = m.ownBlessingOfWisdom;
+            this.enemyBlessingOfWisdom = m.enemyBlessingOfWisdom;
+            this.ownPowerWordGlory = m.ownPowerWordGlory;
+            this.enemyPowerWordGlory = m.enemyPowerWordGlory;
+            this.spellpower = m.spellpower;
+            this.cantBeTargetedBySpellsOrHeroPowers = m.cantBeTargetedBySpellsOrHeroPowers;
+            this.cost = m.cost;
+
+            this.Hp = m.Hp;
+            this.maxHp = m.maxHp;
+            this.armor = m.armor;
+
+            this.Angr = m.Angr;
+            this.AdjacentAngr = m.AdjacentAngr;
+            this.tempAttack = m.tempAttack;
+            this.justBuffed = m.justBuffed;
+
+            this.Ready = m.Ready;
+
+            this.taunt = m.taunt;
+            this.wounded = m.wounded;
+
+            this.divineShield = m.divineShield;
+            this.windfury = m.windfury;
+            this.megaWindfury = m.megaWindfury;
+            this.frozen = m.frozen;
+            this.stealth = m.stealth;
+            this.immune = m.immune;
+            this.untouchable = m.untouchable;
+            this.exhausted = m.exhausted;
+            this.Elusive = m.Elusive;
+            this.Spellburst = m.Spellburst;
+            this.Overkill = m.Overkill;
+            this.Frenzy = m.Frenzy;
+            this.HonorableKill = m.HonorableKill;
+            this.Enraged = m.Enraged;
+            this.Aura = m.Aura;
+            this.TriggerVisual = m.TriggerVisual;
+            this.Deathrattle = m.Deathrattle;
+            this.charge = m.charge;
+            this.rush = m.rush;
+            this.hChoice = m.hChoice;
+            this.poisonous = m.poisonous;
+            this.modular = m.modular;
+            this.enchs = m.enchs;
+
+            this.lifesteal = m.lifesteal;
+            this.dormant = m.dormant;
+            this.outcast = m.outcast;
+            this.reborn = m.reborn;
+            this.cantLowerHPbelowONE = m.cantLowerHPbelowONE;
+
+            this.silenced = m.silenced;
+            this.Titan = m.Titan;
+            this.TitanAbilityUsed1 = m.TitanAbilityUsed1;
+            this.TitanAbilityUsed2 = m.TitanAbilityUsed2;
+            this.TitanAbilityUsed3 = m.TitanAbilityUsed3;
+
+            this.CooldownTurn = m.CooldownTurn;
+
+            this.onanelekk = m.onanelekk;
+            this.onahorse = m.onahorse;
+            this.onaram = m.onaram;
+            this.onakodo = m.onakodo;
+            this.plagued = m.plagued;
+        }
+
+        /// <summary>
+        /// 将 Minion 实例重置为可复用的空状态。
+        /// 清除所有列表和字段引用以便安全地归还对象池。
+        /// </summary>
+        public void ClearForPool()
+        {
+            // 重置整数字段
+            this.anzGotDmg = 0;
+            this.GotDmgValue = 0;
+            this.anzGotHealed = 0;
+            this.GotHealedValue = 0;
+            this.pID = 0;
+            this.synergy = 0;
+            this.entityID = -1;
+            this.zonepos = 0;
+            this.numAttacksThisTurn = 0;
+            this.extraAttacksThisTurn = 0;
+            this.TAG_SCRIPT_DATA_NUM_1 = 0;
+            this.TAG_SCRIPT_DATA_NUM_2 = 0;
+            this.MODULAR_ENTITY_PART_1 = 0;
+            this.MODULAR_ENTITY_PART_2 = 0;
+            this.spellpower = 0;
+            this.cost = 0;
+            this.Hp = 0;
+            this.maxHp = 0;
+            this.armor = 0;
+            this.Angr = 0;
+            this.AdjacentAngr = 0;
+            this.tempAttack = 0;
+            this.justBuffed = 0;
+            this.hChoice = 0;
+            this.CooldownTurn = 0;
+            this.ownBlessingOfWisdom = 0;
+            this.enemyBlessingOfWisdom = 0;
+            this.ownPowerWordGlory = 0;
+            this.enemyPowerWordGlory = 0;
+            this.ancestralspirit = 0;
+            this.desperatestand = 0;
+            this.souloftheforest = 0;
+            this.stegodon = 0;
+            this.onanelekk = 0;
+            this.onahorse = 0;
+            this.onaram = 0;
+            this.onakodo = 0;
+            this.itsnecrolit = 0;
+            this.plagued = 0;
+            this.greybud = 0;
+            this.infected = 0;
+            this.finalsession = 0;
+            this.sheepmask = 0;
+            this.livingspores = 0;
+            this.explorershat = 0;
+            this.libramofwisdom = 0;
+            this.returnToHand = 0;
+            this.infest = 0;
+            this.charge = 0;
+            this.rush = 0;
+            this.dormant = 0;
+            this.extraParam2 = 0;
+
+            // 重置布尔字段
+            this.gotInspire = false;
+            this.isHero = false;
+            this.own = false;
+            this.playedFromHand = false;
+            this.playedThisTurn = false;
+            this.playedPrevTurn = false;
+            this.ShowSleepZZZOverride = false;
+            this.allreadyAttacked = false;
+            this.cantAttackHeroes = false;
+            this.cantAttack = false;
+            this.immuneWhileAttacking = false;
+            this.nonKeyWordCharge = false;
+            this.shadowmadnessed = false;
+            this.destroyOnOwnTurnStart = false;
+            this.destroyOnEnemyTurnStart = false;
+            this.destroyOnOwnTurnEnd = false;
+            this.destroyOnEnemyTurnEnd = false;
+            this.changeOwnerOnTurnStart = false;
+            this.conceal = false;
+            this.Ready = false;
+            this.taunt = false;
+            this.wounded = false;
+            this.divineShield = false;
+            this.windfury = false;
+            this.megaWindfury = false;
+            this.frozen = false;
+            this.stealth = false;
+            this.immune = false;
+            this.untouchable = false;
+            this.exhausted = false;
+            this.lifesteal = false;
+            this.outcast = false;
+            this.reborn = false;
+            this.poisonous = false;
+            this.modular = false;
+            this.silenced = false;
+            this.extraParam = false;
+            this.cantLowerHPbelowONE = false;
+            this.cantBeTargetedBySpellsOrHeroPowers = false;
+            this.Titan = false;
+            this.TitanAbilityUsed1 = false;
+            this.TitanAbilityUsed2 = false;
+            this.TitanAbilityUsed3 = false;
+
+            // 重置属性
+            this.Elusive = false;
+            this.Enraged = false;
+            this.Spellburst = false;
+            this.Frenzy = false;
+            this.Overkill = false;
+            this.HonorableKill = false;
+            this.Aura = false;
+            this.TriggerVisual = false;
+            this.Deathrattle = false;
+
+            // 重置枚举字段
+            this.name = CardDB.cardNameEN.unknown;
+            this.nameCN = CardDB.cardNameCN.未知;
+            this.cardId = CardDB.cardIDEnum.None;
+            this.cardClass = TAG_CLASS.INVALID;
+
+            // 重置引用类型
+            this.deathrattle2 = null;
+            this.handcard = null;
+
+            // 清空列表
+            this.enchs.Clear();
+        }
+
         public int getRealAttack()
         {
             return this.Angr;

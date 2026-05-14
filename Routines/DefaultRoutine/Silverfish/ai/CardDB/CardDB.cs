@@ -115,7 +115,19 @@ namespace HREngine.Bots
             public bool isSpecialMinion = false;
             public int spellpowervalue = 0;
             public List<cardtrigers> trigers;
-            public SimTemplate sim_card = new SimTemplate();
+            private SimTemplate _simCard;
+            public SimTemplate sim_card
+            {
+                get
+                {
+                    if (_simCard == null)
+                    {
+                        _simCard = CardDB.GetCardSimulation(this.cardIDenum);
+                    }
+                    return _simCard;
+                }
+                set { _simCard = value; }
+            }
             /// <summary>
             /// 将其视为同一张卡。储存defid,根据卡defid获取同一张卡的sim
             /// </summary>
@@ -272,9 +284,9 @@ namespace HREngine.Bots
             /// <returns>种族集合</returns>
             public List<Race> GetRaces()
             {
-                if (this.races != null)
+                if (this.races == null)
                 {
-                    return this.races;
+                    this.races = new List<Race>();
                 }
                 if (this.races.Contains(Race.ALL))
                 {
@@ -1910,17 +1922,6 @@ namespace HREngine.Bots
                     var dt = DateTime.Now;
                     instance = new CardDB();
                     //instance.enumCreator();// only call this to get latest cardids
-                    // have to do it 2 times (or the kids inside the simcards will not have a simcard :D
-                    Helpfunctions.Instance.ErrorLog("开始加载Sim");
-                    //加载卡牌的REQ
-                    foreach (Card c in instance.cardlist)
-                    {
-                        if (c.cardIDenum != cardIDEnum.None)  // 增加非None判断
-                            c.sim_card = GetCardSimulation(c.cardIDenum);
-                        if (c.sim_card == null) continue;
-                        foreach (var pr in c.sim_card.GetPlayReqs()) pr.UpdateCardAttr(c);
-                    }
-
                     // 处理「套牌规则视为同一卡牌」的替换逻辑
                     foreach (Card c in instance.cardlist)
                     {
@@ -2126,26 +2127,62 @@ namespace HREngine.Bots
             this.cardlist.Add(new Card { nameEN = cardNameEN.unknown, cost = 10 });
             this.unknownCard = cardlist[0];
 
-            var filePath = Path.Combine(Settings.Instance.path, "CardDefs.xml");
-            if (!File.Exists(filePath))
-            {
-                Helpfunctions.Instance.ErrorLog("ERROR#################################################");
-                Helpfunctions.Instance.ErrorLog("ERROR#################################################");
-                Helpfunctions.Instance.ErrorLog("ERROR#################################################");
-                Helpfunctions.Instance.ErrorLog("ERROR#################################################");
-                Helpfunctions.Instance.ErrorLog("在" + Settings.Instance.path + "下找不到 CardDefs.xml!");
-                Helpfunctions.Instance.ErrorLog("ERROR#################################################");
-                Helpfunctions.Instance.ErrorLog("ERROR#################################################");
-                Helpfunctions.Instance.ErrorLog("ERROR#################################################");
-                Helpfunctions.Instance.ErrorLog("ERROR#################################################");
-                return;
-            }
-            var reNameEN = new Regex("[a-zA-Z0-9]");
-            var reNameCN = new Regex("[a-zA-Z0-9]|[\\u4e00-\\u9fa5]");
+            //尝试加载CardDefs.bin二进制缓存提速(避免每次启动解析35MB XML)
+            string xmlPath = Path.Combine(Settings.Instance.path, "CardDefs.xml");
+            string binPath = Path.Combine(Settings.Instance.path, "CardDefs.bin");
+            bool loadedFromCache = false;
 
-            XmlDocument doc = new XmlDocument();
-            doc.Load(filePath);
-            var entities = doc.SelectNodes("CardDefs/Entity");
+            if (File.Exists(binPath))
+            {
+                try
+                {
+                    DateTime binTime = File.GetLastWriteTimeUtc(binPath);
+                    DateTime xmlTime = File.Exists(xmlPath) ? File.GetLastWriteTimeUtc(xmlPath) : DateTime.MinValue;
+                    if (binTime >= xmlTime)
+                    {
+                        List<CardDB.Card> loadedCards;
+                        Dictionary<CardDB.cardIDEnum, CardDB.Card> loadedCardIdMap;
+                        Dictionary<string, CardDB.Card> loadedDbfIdMap;
+                        Dictionary<CardDB.cardNameCN, CardDB.Card> loadedNameCNMap;
+                        Dictionary<CardDB.cardNameEN, CardDB.Card> loadedNameENMap;
+
+                        if (CardDefsCache.TryLoad(binPath, out loadedCards, out loadedCardIdMap, out loadedDbfIdMap, out loadedNameCNMap, out loadedNameENMap))
+                        {
+                            this.cardlist = loadedCards;
+                            this.cardidToCardList = loadedCardIdMap;
+                            this.carddbfidToCardList = loadedDbfIdMap;
+                            this.cardNameCNToCardList = loadedNameCNMap;
+                            this.cardNameENToCardList = loadedNameENMap;
+                            this.unknownCard = this.cardlist[0];
+                            loadedFromCache = true;
+                        }
+                    }
+                }
+                catch { }
+            }
+
+            if (!loadedFromCache)
+            {
+                var filePath = Path.Combine(Settings.Instance.path, "CardDefs.xml");
+                if (!File.Exists(filePath))
+                {
+                    Helpfunctions.Instance.ErrorLog("ERROR#################################################");
+                    Helpfunctions.Instance.ErrorLog("ERROR#################################################");
+                    Helpfunctions.Instance.ErrorLog("ERROR#################################################");
+                    Helpfunctions.Instance.ErrorLog("ERROR#################################################");
+                    Helpfunctions.Instance.ErrorLog("在" + Settings.Instance.path + "下找不到 CardDefs.xml!");
+                    Helpfunctions.Instance.ErrorLog("ERROR#################################################");
+                    Helpfunctions.Instance.ErrorLog("ERROR#################################################");
+                    Helpfunctions.Instance.ErrorLog("ERROR#################################################");
+                    Helpfunctions.Instance.ErrorLog("ERROR#################################################");
+                    return;
+                }
+                var reNameEN = new Regex("[a-zA-Z0-9]");
+                var reNameCN = new Regex("[a-zA-Z0-9]|[\\u4e00-\\u9fa5]");
+
+                XmlDocument doc = new XmlDocument();
+                doc.Load(filePath);
+                var entities = doc.SelectNodes("CardDefs/Entity");
             foreach (XmlElement entity in entities)
             {
                 var cardId = entity.GetAttribute("CardID");
@@ -2914,6 +2951,7 @@ namespace HREngine.Bots
                     cardNameENToCardList[card.nameEN] = card;
                 }
             }
+            } // if (!loadedFromCache)
 
             //处理DECK_ACTION_COST、TAG_SCRIPT_DATA_NUM_1、TAG_SCRIPT_DATA_NUM_2等属性
             foreach (Card item in cardlist)
@@ -2936,7 +2974,13 @@ namespace HREngine.Bots
                     if (OriginCard != this.unknownCard)
                         item.sim_card = OriginCard.sim_card;
                 }
+            }
 
+            //在POST-PROCESSING之后保存二进制缓存，确保InfuseNum/TradeCost/ForgeCost等字段已正确设置
+            if (!loadedFromCache)
+            {
+                try { CardDefsCache.Save(binPath, this.cardlist, this.cardidToCardList, this.carddbfidToCardList, this.cardNameCNToCardList, this.cardNameENToCardList); }
+                catch { }
             }
         }
 
@@ -3028,22 +3072,27 @@ namespace HREngine.Bots
 
 
                 c.trigers = new List<cardtrigers>();
-                Type trigerType = c.sim_card.GetType();
-                foreach (string trigerName in Enum.GetNames(typeof(cardtrigers)))
+                // 只有拥有自定义 Sim_XXX 类的卡牌才需要检查触发器类型
+                // 默认 SimTemplate 有超过 20 个虚方法，其 trigers 会在后续被清空
+                if (SimTypesDict.ContainsKey("Sim_" + c.cardIDenum.ToString()))
                 {
-                    try
+                    Type trigerType = c.sim_card.GetType();
+                    foreach (string trigerName in Enum.GetNames(typeof(cardtrigers)))
                     {
-                        foreach (var m in trigerType.GetMethods().Where(e => e.Name.Equals(trigerName, StringComparison.Ordinal)))
+                        try
                         {
-                            if (m.DeclaringType == trigerType)
-                                c.trigers.Add((cardtrigers)Enum.Parse(typeof(cardtrigers), trigerName));
+                            foreach (var m in trigerType.GetMethods().Where(e => e.Name.Equals(trigerName, StringComparison.Ordinal)))
+                            {
+                                if (m.DeclaringType == trigerType)
+                                    c.trigers.Add((cardtrigers)Enum.Parse(typeof(cardtrigers), trigerName));
+                            }
+                        }
+                        catch
+                        {
                         }
                     }
-                    catch
-                    {
-                    }
+                    if (c.trigers.Count > 20) c.trigers.Clear();
                 }
-                if (c.trigers.Count > 20) c.trigers.Clear();
             }
         }
     }

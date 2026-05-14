@@ -22,7 +22,7 @@ namespace HREngine.Bots
         {
             foreach (Minion m in source)
             {
-                trgt.Add(new Minion(m));  // 创建源 Minion 的副本并添加到目标列表
+                trgt.Add(MinionPool.Rent(m));  // 从池中获取或创建源 Minion 的副本
             }
         }
 
@@ -34,7 +34,7 @@ namespace HREngine.Bots
         {
             foreach (Handmanager.Handcard hc in source)
             {
-                this.owncards.Add(new Handmanager.Handcard(hc));  // 创建源 Handcard 的副本并添加到 owncards 列表
+                this.owncards.Add(HandcardPool.Rent(hc));  // 从池中获取或创建源 Handcard 的副本
             }
         }
 

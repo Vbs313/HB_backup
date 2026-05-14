@@ -9,6 +9,9 @@
     /// </summary>
     public class MiniSimulatorNextTurn
     {
+        // 静态只读比较器，避免 Sort lambda 每次分配委托
+        private static readonly Comparison<Playfield> ValueDescComparer = (a, b) => b.value.CompareTo(a.value);
+
         //#####################################################################################################################
         //public int maxdeep = 6;      // 最大搜索深度
         //public int maxwide = 10;      // 每步最大保留场面数
@@ -248,8 +251,8 @@
                 {
                     botBase.getPlayfieldValue(posmoves[i]);
                 }
-                // 按价值排序（直接使用缓存的value字段）
-                posmoves.Sort((a, b) => b.value.CompareTo(a.value));
+                // 按价值排序（使用静态Comparer, 零分配）
+                posmoves.Sort(ValueDescComparer);
 
                 // 初始化最佳状态
                 Playfield bestplay = posmoves[0];
@@ -296,8 +299,8 @@
 
             try
             {
-                // 按价值排序，保留最佳状态
-                posmoves.Sort((a, b) => -(botBase.getPlayfieldValue(a)).CompareTo(botBase.getPlayfieldValue(b)));//want to keep the best
+                // 按价值排序，保留最佳状态 (使用已缓存的value, 避免O(n log n)次重复计算)
+                posmoves.Sort(ValueDescComparer);
             }
             catch (Exception e)
             {
