@@ -14,3 +14,41 @@ bin/
 obj/
 CompiledAssemblies/
 *.pdb
+
+# Runtime helper binary
+Helper32.exe
+
+# Self-rename mechanism (random 10-char exe copies)
+[a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z].exe
+[a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z].exe.config
+
+# Runtime logs
+Logs/
+myLog.txt
+fatal-*.txt
+
+# Server-manager skill artifacts
+.command-logs/
+.server-logs/
+.commands.json
+.servers.json
+
+# Temp/test files
+Helper32.old
+startup.err
+startup.log
+Tools/ArchTest/
+Tools/ArchTest2/
+
+# Card data (auto-generated binary cache)
+CardDefs.xml
+CardDefs.bin
+Routines/DefaultRoutine/Silverfish/data/CardDefs.bin
+
+# JIT profiles
+JitProfiles/
+
+# Runtime settings (auto-modified)
+Settings/Default/Main.json
+Settings/Default/DefaultRoutine.json
+Settings/Default/Quest.json

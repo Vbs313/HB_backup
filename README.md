@@ -230,6 +230,40 @@ dotnet build CompilingDLLs.sln
 - [ ] 实现光环牌的效果
 - [ ] 实现伤害来源，好判断吸血和剧毒
 
+## x64 架构迁移 & CardDB 性能优化（2026-05-16）
+
+### CardDB 解析速度 2-5min → 21s
+
+**根因**: 原始代码使用 `XmlReader.ReadOuterXml()` → `new XmlDocument()` → `LoadXml(entityXml)` 来解析 `<Entity>` 元素。34K 个 Entity 各创建一次 XmlDocument DOM 树，总耗时 2-5 分钟。
+
+**方案**: 纯 `XmlReader` 流式解析，零中间对象分配：
+- Entity 属性直接从 Reader 读取：`reader.GetAttribute("CardID")` — 不创建任何对象
+- 子 Tag 标签：99% 为自闭合标签 (`<Tag enumID="45" value="4"/>`)，直接读属性后跳过
+- 仅 2 种标签（184/textCN、185/nameEN/nameCN）使用 `ReadSubtree()` 读取子元素
+- 预期 GC 压力：近零（无 DOM 树分配、无字符串中间分配）
+
+**结果**: CardDefs.xml 首次解析从 2-5 分钟降至 **21.73 秒**（~14x 提速）。后续启动使用 CardDefs.bin 二进制缓存，秒级加载。
+
+### x64 架构迁移
+
+- **GreyMagic 替换**: 混合模式 DLL（IL + x86 原生） → 纯 C# P/Invoke（3,900+ 行）
+- **Helper32 辅助进程**: 32-bit NamedPipe IPC，处理 64→32 跨位数 CreateRemoteThread
+- **AnyCPU 编译**: 所有 7 个项目移除 processorArchitecture=x86 + PlatformTarget=x86
+- **SilverfishCards.dll 拆分**: 5,961 卡牌模拟类从 DefaultRoutine 分离到独立 DLL，TypeLoader 不再扫描卡牌类型
+- **Roslyn/MSBuild 双路径**: CardDB 静态构造按需扫描 SilverfishCards.dll 或 DefaultRoutine.dll
+
+### 构建
+
+```bash
+# 构建主程序
+dotnet build Hearthbuddy.sln --configuration Release
+
+# 构建插件
+dotnet build CompilingDLLs.sln --configuration Release
+```
+
+---
+
 ## 当日更新日志（2026-05-05）
 
 ### 一、代码审核与修复
