@@ -7,7 +7,7 @@
     <!-- 默认配置为 Debug -->
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <!-- 默认平台为 x86 -->
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform>AnyCPU</Platform>
     <!-- 项目唯一标识符 -->
     <ProjectGuid>{45678901-4567-4567-8901-234567890126}</ProjectGuid>
     <!-- 输出类型为类库 -->
@@ -27,7 +27,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <!-- Debug 配置设置 -->
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <!-- 生成调试符号 -->
     <DebugSymbols>false</DebugSymbols>
     <!-- 不生成调试信息 -->
@@ -45,12 +45,12 @@
     <!-- 警告级别 -->
     <WarningLevel>4</WarningLevel>
     <!-- 目标平台 -->
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <!-- 不首选 32 位 -->
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <!-- Release 配置设置 -->
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <!-- 不生成调试信息 -->
     <DebugType>none</DebugType>
     <!-- 优化代码 -->
@@ -66,7 +66,7 @@
     <!-- 警告级别 -->
     <WarningLevel>4</WarningLevel>
     <!-- 目标平台 -->
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <!-- 不首选 32 位 -->
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -85,10 +85,7 @@
   <!-- 项目引用 -->
   <ItemGroup>
     <!-- Hearthbuddy 引用 -->
-    <Reference Include="GreyMagic">
-      <HintPath>..\lib\GreyMagic.dll</HintPath>
-    </Reference>
-    <Reference Include="Hearthbuddy, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Hearthbuddy, Version=0.0.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Hearthbuddy.exe</HintPath>
     </Reference>
@@ -133,3 +130,5 @@
     </PackageReference>
   </ItemGroup>
 </Project>
+
+

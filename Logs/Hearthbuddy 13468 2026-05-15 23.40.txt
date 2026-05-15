@@ -1,0 +1,27 @@
+2026-05-15 15:40:21,324 [1] INFO  App (null) - Hearthbuddy Version: 0.0.0.0
+Path: E:\Next\HB_backup\<ExeName>
+
+OS Name: Microsoft Windows 11 专业版
+OS Version: 10.0.26200
+OS Architecture: 64 位
+InstalledUICulture: zh-CN [Chinese (Simplified, Mainland China)]
+CurrentUICulture: zh-CN [Chinese (Simplified, Mainland China)]
+CurrentCulture: zh-CN [Chinese (Simplified, Mainland China)]
+
+2026-05-15 15:40:21,347 [1] INFO  App (null) - Now setting up JitProfiles...
+2026-05-15 15:40:21,348 [1] INFO  App (null) - JitProfiles successfully setup!
+2026-05-15 15:40:21,348 [1] INFO  App (null) - Now beginning pre-start tasks.
+2026-05-15 15:40:21,349 [1] INFO  App (null) - Now checking prerequisites...
+2026-05-15 15:40:21,355 [1] ERROR App (null) - [中控设置] 默认设置操作系统 = Windows10.
+2026-05-15 15:40:21,361 [1] INFO  App (null) - Prerequisite check complete!
+2026-05-15 15:40:21,384 [1] INFO  App (null) - svchostPath: C:\WINDOWS\System32\svchost.exe
+2026-05-15 15:40:21,403 [1] INFO  App (null) - Pre-start tasks successfully completed.
+2026-05-15 15:40:21,660 [1] INFO  BotManager (null) - [BotManager] MsBetweenTicks = 5
+2026-05-15 15:40:21,662 [1] INFO  BotManager (null) - [BotManager] MsBetweenTicks = 20
+2026-05-15 15:40:22,945 [1] INFO  MainWindow (null) - 检测到炉石进程！
+2026-05-15 15:40:23,101 [7] INFO  MainWindow (null) - 绑定到炉石进程！
+2026-05-15 15:40:23,124 [7] INFO  DefaultBotSettings (null) - [天梯脚本设置] 对战模式 = 狂野.
+2026-05-15 15:40:23,126 [7] INFO  DefaultBotSettings (null) - [天梯脚本设置] 卡组名称 = 请选择卡组.
+2026-05-15 15:40:23,127 [7] INFO  DefaultBotSettings (null) - [天梯脚本设置] 需要缓存卡组 = True.
+2026-05-15 15:40:23,129 [7] INFO  DefaultBotSettings (null) - [天梯脚本设置] 自动设置炉石窗口宽高 = True.
+2026-05-15 15:40:23,166 [1] DEBUG MainWindow (null) - Current bot set to 天梯脚本.

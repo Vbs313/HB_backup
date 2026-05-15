@@ -7,7 +7,7 @@
     <!-- 默认配置为 Debug -->
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <!-- 默认平台为 x86 -->
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform>AnyCPU</Platform>
     <!-- 项目唯一标识符 -->
     <ProjectGuid>{77540557-1C8F-4388-8314-A0F9343870BC}</ProjectGuid>
     <!-- 输出类型为类库 -->
@@ -27,7 +27,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <!-- Debug 配置设置 -->
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <!-- 生成调试符号 -->
     <DebugSymbols>false</DebugSymbols>
     <!-- 不生成调试信息 -->
@@ -45,12 +45,12 @@
     <!-- 警告级别 -->
     <WarningLevel>4</WarningLevel>
     <!-- 目标平台 -->
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <!-- 不首选 32 位 -->
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <!-- Release 配置设置 -->
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <!-- 不生成调试信息 -->
     <DebugType>none</DebugType>
     <!-- 优化代码 -->
@@ -66,7 +66,7 @@
     <!-- 警告级别 -->
     <WarningLevel>4</WarningLevel>
     <!-- 目标平台 -->
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <!-- 不首选 32 位 -->
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -86,12 +86,9 @@
   <ItemGroup>
     <!-- DefaultBot 引用 -->
     <!-- GreyMagic 引用 -->
-    <Reference Include="GreyMagic, Version=1.0.121.0, Culture=neutral, PublicKeyToken=260525fa2b0e778a, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GreyMagic.dll</HintPath>
-    </Reference>
+    <!-- GreyMagic 引用已移除：替换为 Triton\Game\GreyMagic.cs 的 P/Invoke 实现 -->
     <!-- Hearthbuddy 引用 -->
-    <Reference Include="Hearthbuddy, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Hearthbuddy, Version=0.0.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Hearthbuddy.exe</HintPath>
     </Reference>
@@ -141,8 +138,8 @@
   <ItemGroup>
     <!-- 注释掉的旧编译配置（排除测试文件） -->
     <!-- <Compile Include="Routines\DefaultRoutine\**\*.cs" Exclude="Routines\DefaultRoutine\Silverfish\Test\**\*.cs" /> -->
-    <!-- 包含所有 C# 文件进行编译 -->
-    <Compile Include="..\Routines\DefaultRoutine\**\*.cs" />
+    <!-- 排除卡牌文件（已拆分到 SilverfishCards 项目） -->
+    <Compile Include="..\Routines\DefaultRoutine\**\*.cs" Exclude="..\Routines\DefaultRoutine\Silverfish\cards\**\*.cs;..\Routines\DefaultRoutine\Silverfish\cards\**\*.stub" />
   </ItemGroup>
   <!-- 其他文件（不参与编译但需要包含在项目中） -->
   <ItemGroup>
@@ -170,3 +167,4 @@
     </PackageReference>
   </ItemGroup>
 </Project>
+

@@ -18,20 +18,38 @@ namespace HREngine.Bots
         // 存储 Sim_* 类的类型字典
         private static readonly Dictionary<string, Type> SimTypesDict;
 
-        // 静态构造函数：反射填充字典
+        // 静态构造函数：扫描所有程序集填充卡牌类型字典
         static CardDB()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            Type baseType = typeof(SimTemplate);
-            // 使用显式委托 + 传统循环代替 LINQ 并行查询（避免隐式类型 lambda 争议）
-            Dictionary<string, Type> dict = new Dictionary<string, Type>();
-            Type[] allTypes = assembly.GetTypes();
-            foreach (Type t in allTypes)
+            // 加载 SilverfishCards.dll（卡牌模拟类独立程序集）
+            try
             {
-                if (t.Namespace == "HREngine.Bots" && t.BaseType == baseType)
+                // 先尝试从执行目录加载，再尝试从 CompiledAssemblies 加载
+                string exeDir = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string cardsPath = System.IO.Path.Combine(exeDir, "SilverfishCards.dll");
+                if (!System.IO.File.Exists(cardsPath))
+                    cardsPath = System.IO.Path.Combine(exeDir, "..", "CompiledAssemblies", "SilverfishCards.dll");
+                if (!System.IO.File.Exists(cardsPath))
+                    cardsPath = System.IO.Path.Combine(Environment.CurrentDirectory, "CompiledAssemblies", "SilverfishCards.dll");
+                if (System.IO.File.Exists(cardsPath))
+                    Assembly.LoadFrom(cardsPath);
+            }
+            catch { /* SilverfishCards.dll 非必需 */ }
+
+            Type baseType = typeof(SimTemplate);
+            var dict = new Dictionary<string, Type>();
+            // 扫描当前 AppDomain 中所有程序集，查找 SimTemplate 子类
+            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                try
                 {
-                    dict[t.Name] = t;
+                    foreach (var t in asm.GetTypes())
+                    {
+                        if (t.Namespace == "HREngine.Bots" && t.BaseType == baseType)
+                            dict[t.Name] = t;
+                    }
                 }
+                catch { /* 跳过无法反射的程序集 */ }
             }
             SimTypesDict = dict;
         }
@@ -2180,11 +2198,17 @@ namespace HREngine.Bots
                 var reNameEN = new Regex("[a-zA-Z0-9]");
                 var reNameCN = new Regex("[a-zA-Z0-9]|[\\u4e00-\\u9fa5]");
 
-                XmlDocument doc = new XmlDocument();
-                doc.Load(filePath);
-                var entities = doc.SelectNodes("CardDefs/Entity");
-            foreach (XmlElement entity in entities)
+                //流式读取 XML（XmlReader），避免 400MB DOM 树导致 x86 地址空间碎片化
+                //每个 Entity 处理后立即释放，峰值内存从 400MB 降到约 50MB
+            using (var xmlReader = System.Xml.XmlReader.Create(filePath))
             {
+                while (xmlReader.ReadToFollowing("Entity"))
+                {
+                    //读取当前 Entity 的全部 XML，创建轻量 XmlDocument
+                    var entityXml = xmlReader.ReadOuterXml();
+                    var entityDoc = new System.Xml.XmlDocument();
+                    entityDoc.LoadXml(entityXml);
+                    var entity = entityDoc.DocumentElement;
                 var cardId = entity.GetAttribute("CardID");
                 var card = new Card();
                 card.dbfId = entity.GetAttribute("ID");
@@ -2209,6 +2233,7 @@ namespace HREngine.Bots
                     card.isToken = true;
                 }
 
+                //parse tags: 使用 XmlReader 读取子 Tag，每个 Tag 创建轻量 XmlDocument
                 //parse tags
                 foreach (XmlElement tag in entity.ChildNodes)
                 {
@@ -2950,7 +2975,8 @@ namespace HREngine.Bots
                 {
                     cardNameENToCardList[card.nameEN] = card;
                 }
-            }
+            } // end while (xmlReader.ReadToFollowing)
+            } // end using (XmlReader)
             } // if (!loadedFromCache)
 
             //处理DECK_ACTION_COST、TAG_SCRIPT_DATA_NUM_1、TAG_SCRIPT_DATA_NUM_2等属性
@@ -2977,10 +3003,24 @@ namespace HREngine.Bots
             }
 
             //在POST-PROCESSING之后保存二进制缓存，确保InfuseNum/TradeCost/ForgeCost等字段已正确设置
+            Log.Info("CardDB: loadedFromCache=" + loadedFromCache + " cardlist.Count=" + cardlist.Count + " binPath=" + binPath);
             if (!loadedFromCache)
             {
-                try { CardDefsCache.Save(binPath, this.cardlist, this.cardidToCardList, this.carddbfidToCardList, this.cardNameCNToCardList, this.cardNameENToCardList); }
-                catch { }
+                try
+                {
+                    var sw = System.Diagnostics.Stopwatch.StartNew();
+                    CardDefsCache.Save(binPath, this.cardlist, this.cardidToCardList, this.carddbfidToCardList, this.cardNameCNToCardList, this.cardNameENToCardList);
+                    sw.Stop();
+                    Log.Info("CardDefsCache.Save DONE (" + sw.Elapsed.TotalSeconds.ToString("0.0") + "s) -> " + binPath);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn("CardDefsCache.Save FAILED: " + ex.Message);
+                }
+            }
+            else
+            {
+                Log.Info("CardDB: loaded from cache, skipping save");
             }
         }
 

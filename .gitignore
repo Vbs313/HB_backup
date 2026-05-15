@@ -1,6 +1,9 @@
 # Auto-generated build artifacts
 build-info.txt
 build-version.txt
+*.stub
+*.exe.config
+Hearthbuddy.exe
 *.user
 *.suo
 *.sdf
