@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -81,12 +81,9 @@ namespace HREngine.Bots
         private int anzOgOwnCThunHpBonus = 0;//克苏恩血量
         private int anzOgOwnCThunAngrBonus = 0;//克苏恩攻击
         private int anzOgOwnCThunTaunt = 0;//克苏恩嘲讽
-        private static Silverfish instance;
+        private static readonly System.Lazy<Silverfish> instance = new System.Lazy<Silverfish>(() => new Silverfish());
 
-        public static Silverfish Instance
-        {
-            get { return instance ?? (instance = new Silverfish()); }
-        }
+        public static Silverfish Instance => instance.Value;
 
         private Silverfish()
         {
@@ -111,6 +108,10 @@ namespace HREngine.Bots
             setBehavior();
             getAllCards = Extensions.GetAllCards;
 
+            Helpfunctions.Instance.ErrorLog("开始预热AI对象池(Playfield=500, Minion=2000, Handcard=1000)...");
+            PlayfieldPool.Prewarm(500);
+            MinionPool.Prewarm(2000);
+            HandcardPool.Prewarm(1000);
         }
 
         /// <summary>

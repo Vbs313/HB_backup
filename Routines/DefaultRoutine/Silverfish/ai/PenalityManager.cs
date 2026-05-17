@@ -119,15 +119,9 @@
         CardDB cdb;//卡牌数据
         Ai ai;//ai
 
-        private static PenalityManager instance;
+        private static readonly System.Lazy<PenalityManager> instance = new System.Lazy<PenalityManager>(() => new PenalityManager());
 
-        public static PenalityManager Instance
-        {
-            get
-            {
-                return instance ?? (instance = new PenalityManager());
-            }
-        }
+        public static PenalityManager Instance => instance.Value;
 
         public void setInstances()
         {

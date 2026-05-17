@@ -290,12 +290,16 @@
         /// 剪枝可能的状态
         /// </summary>
         /// <param name="maxwide">每步最大保留场面数</param>
+        // x64 优化: 实例级缓存临时集合
+        List<Playfield> _cutTemp = new List<Playfield>();
+        Dictionary<Int64, Playfield> _cutDict = new Dictionary<Int64, Playfield>();
+
         public void cuttingposibilities(int maxwide)
         {
-            // 临时存储剪枝后的状态
-            List<Playfield> temp = new List<Playfield>();
-            // 用于去重的字典
-            Dictionary<Int64, Playfield> tempDict = new Dictionary<Int64, Playfield>();
+            _cutTemp.Clear();
+            _cutDict.Clear();
+            var temp = _cutTemp;
+            var tempDict = _cutDict;
 
             try
             {

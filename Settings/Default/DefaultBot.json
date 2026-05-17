@@ -2,7 +2,7 @@
   "NowWinGameCount": 0,
   "NowLoseGameCount": 0,
   "ConstructedGameRule": 1,
-  "ConstructedCustomDeck": "请选择卡组",
+  "ConstructedCustomDeck": "X1",
   "LastDeckId": 0,
   "AutoGreet": false,
   "ReleaseLimitW": 144,

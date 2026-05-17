@@ -776,12 +776,16 @@ namespace HREngine.Bots
         /// 去除重复的游戏状态，保留最优的游戏状态，以优化搜索过程
         /// </summary>
         /// <param name="isLethalCheck">是否进行斩杀检查</param>
+        // x64 优化: 实例级缓存临时集合
+        List<Playfield> _cutTemp = new List<Playfield>();
+        Dictionary<Int64, Playfield> _cutDict = new Dictionary<Int64, Playfield>();
+
         public void cuttingposibilities(bool isLethalCheck)
         {
-            // 创建临时游戏状态列表
-            List<Playfield> temp = new List<Playfield>();
-            // 创建临时字典，用于去重
-            Dictionary<Int64, Playfield> tempDict = new Dictionary<Int64, Playfield>();
+            _cutTemp.Clear();
+            _cutDict.Clear();
+            var temp = _cutTemp;
+            var tempDict = _cutDict;
             try
             {
                 // 计算每个游戏状态的价值 (imperative, no LINQ)
